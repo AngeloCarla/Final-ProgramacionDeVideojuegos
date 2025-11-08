@@ -1,5 +1,6 @@
 using System.Windows.Input;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -14,10 +15,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float gravity = 20.0f; // Gravedad
 
     private Vector3 moveDirection = Vector3.zero;
+    private IMovementStrategy strategy;
+    private ICommand command;
 
     void Start()
     {
         cc = GetComponent<CharacterController>();
+        strategy = new WalkMovement(walkSpeed);
     }
 
     void Update()
@@ -27,20 +31,14 @@ public class PlayerMovement : MonoBehaviour
         // Controla movimiento si el jugador esta en el suelo
         if (cc.isGrounded)
         {
-            
-            // Leer ejes de entrada (A/D y W/S)
-            float moveX = Input.GetAxis("Horizontal");
-            float moveZ = Input.GetAxis("Vertical");
-
-            // Calcula la direccion del movimiento en base a la orientacion del jugador
-            Vector3 move = transform.right * moveX + transform.forward * moveZ;
-
             // Determina la velocidad actual (Shift para correr, sino caminar)
-            float currentSpeed = Input.GetKey(KeyCode.LeftShift) ? runSpeed : walkSpeed;
+            strategy = Input.GetKey(KeyCode.LeftShift) // condición ? si-es-verdadero : si-es-falso
+                ? new RunMovement(runSpeed) : new WalkMovement(walkSpeed);
 
             // Aplica la velocidad al movimiento
-            moveDirection = move * currentSpeed;
+            Vector3 move = strategy.GetMovement(transform);
 
+            moveDirection = move;
             // Salto (tecla Espacio)
             if (Input.GetButton("Jump"))
                 moveDirection.y = jumpForce;
@@ -49,7 +47,8 @@ public class PlayerMovement : MonoBehaviour
         // Aplicar gravedad constantemente
         moveDirection.y -= gravity * Time.deltaTime;
 
-        // Mover al jugador usando CharacterController
-        cc.Move(moveDirection * Time.deltaTime);
+        // Mover al jugador
+        command = new MoveCommand(cc, moveDirection);
+        command.Execute();
     }
 }
