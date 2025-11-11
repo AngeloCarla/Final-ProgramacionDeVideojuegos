@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - ObjetoPrueba
+  - Map
   layers:
   - Default
   - TransparentFX

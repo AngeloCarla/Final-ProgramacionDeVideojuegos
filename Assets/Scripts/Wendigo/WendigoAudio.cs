@@ -46,6 +46,11 @@ public class WendigoAudio : MonoBehaviour
     #endregion
 
     #region Monobehaviour Core
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
+
     void Start()
     {
         Invoke("PerformScream", initialScreamDelay);

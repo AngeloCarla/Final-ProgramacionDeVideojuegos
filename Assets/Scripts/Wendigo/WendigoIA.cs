@@ -8,12 +8,13 @@ public class WendigoAI : MonoBehaviour
     private NavMeshAgent agent; // << CORREGIDO: Usamos 'agent'
     private Animator animator;
     private WendigoAudio wendigoAudio;
+    private Vector3 initialPosition;
 
     // Referencia al jugador
     private Transform Player;
 
     // Parámetros de Animator
-    private readonly int isWalking = Animator.StringToHash("IsWalking");
+    private readonly int isWalking = Animator.StringToHash("isWalking");
     private readonly int doScream = Animator.StringToHash("Scream");
     #endregion
 
@@ -103,11 +104,12 @@ public class WendigoAI : MonoBehaviour
     private void Awake()
     {
         // Obtención de componentes
-        agent = GetComponent<NavMeshAgent>(); // << CORREGIDO: Asigna a 'agent'
+        agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         wendigoAudio = GetComponent<WendigoAudio>();
+        initialPosition = transform.position;
 
-        // Buscar al jugador (asumiendo Tag: "Player")
+        // Buscar al jugador
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
         {
@@ -186,16 +188,20 @@ public class WendigoAI : MonoBehaviour
 
     private void GetNewPatrolPoint()
     {
+        // Genera un punto aleatorio dentro del radio, centrado en la posición inicial
         Vector3 randomDirection = Random.insideUnitSphere * patrolRange;
-        randomDirection += transform.position;
+        randomDirection.y = 0; //Asegura que el punto aleatorio no sea muy alto/bajo
+
+        // Suma a la POSICIÓN CENTRAL de patrulla, no a la posición actual del Wendigo
+        Vector3 randomPoint = initialPosition + randomDirection;
+
         NavMeshHit hit;
 
         // Encuentra el punto más cercano válido en el NavMesh
-        if (NavMesh.SamplePosition(randomDirection, out hit, patrolRange, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(randomPoint, out hit, patrolRange, NavMesh.AllAreas))
         {
-            agent.SetDestination(hit.position); // << CORREGIDO: Usa 'agent'
+            agent.SetDestination(hit.position);
         }
     }
-
     #endregion
 }
