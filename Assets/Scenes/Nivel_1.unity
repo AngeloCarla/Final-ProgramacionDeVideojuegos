@@ -172,6 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectName: Objeto
+  isWood: 0
 --- !u!65 &72380296
 BoxCollider:
   m_ObjectHideFlags: 0

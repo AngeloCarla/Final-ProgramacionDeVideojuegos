@@ -1618,6 +1618,7 @@ MonoBehaviour:
   requiredWood: 3
   completedBridge: {fileID: 1032114032}
   brokenBridge: {fileID: 383283405}
+  countdown: 10
 --- !u!4 &517401543
 Transform:
   m_ObjectHideFlags: 0
