@@ -22,12 +22,13 @@ public class InteractionSystem : MonoBehaviour
         if (Physics.Raycast(ray, out hit, dist, mask))
         {
             var pickUp = hit.collider.GetComponent<PickUpObject>(); // Busca el componente para recoger
+            var delivery = hit.collider.GetComponent<WoodDelivery>(); // Busca si es para entregar 
 
             // Si se apunta a un nuevo objeto, actualiza la seleccion
             if (hit.transform != currentSelection)
             {
                 DeselectCurrent();
-                SelectObject(hit.transform, pickUp);
+                SelectObject(hit.transform, pickUp, delivery);
             }
 
             // --- Interaccion ---
@@ -38,6 +39,11 @@ public class InteractionSystem : MonoBehaviour
                     pickUp.PickUp(); // Ejecuta la accion de recoger
                     DeselectCurrent();
                 }
+                else if (delivery != null)
+                {
+                    delivery.RepairBridge(); // Ejecuta la accion al entregar
+                    DeselectCurrent();
+                }
             }
         }
         else
@@ -46,7 +52,7 @@ public class InteractionSystem : MonoBehaviour
         }
     }
 
-    void SelectObject(Transform transform, PickUpObject pickUp)
+    void SelectObject(Transform transform, PickUpObject pickUp, WoodDelivery delivery)
     {
         currentSelection = transform;
 
@@ -56,11 +62,9 @@ public class InteractionSystem : MonoBehaviour
         {
             Debug.Log($"{pickUp.objectName}");
         }
-        else
+        else if (delivery != null)
         {
-            // Si no tiene PickUpObject, muestra el tag o nombre
-            string nameOrTag = transform.tag != "Untagged" ? transform.tag : transform.name;
-            Debug.Log($"{nameOrTag}");
+            Debug.Log($"{delivery.gameObject.name}");
         }
     }
 
@@ -68,7 +72,7 @@ public class InteractionSystem : MonoBehaviour
     {
         if (currentSelection != null)
         {
-            Debug.Log($"Dejaste de mirar: {currentSelection.name}");
+            Debug.Log("");
             currentSelection = null;
         }
     }

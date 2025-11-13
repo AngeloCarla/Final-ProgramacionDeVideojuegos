@@ -1,3 +1,4 @@
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,33 +8,52 @@ public class CollectWoodMission : MonoBehaviour
     [SerializeField] private int requiredWood = 10; // Total Madera
     private int currentWood = 0; // Cantidad actual de Madera
 
-    [Header("Caminos")]
-    [SerializeField] private List<GameObject> completedBridge; // Puente arreglado
-    [SerializeField] private List<GameObject> brokenBridge; // Puente roto
-    [SerializeField] private GameObject mysteriousPath; // Camino misterioso
+    [Header("Puente")]
+    [SerializeField] private GameObject completedBridge; // Puente arreglado
+    [SerializeField] private GameObject brokenBridge; // Puente roto
+
+    [Header("Timer")]
+    [SerializeField] private float countdown = 10;
+    private float currentTime = 0;
+    private bool isRunningCountdown = false;
+    private Coroutine countdownRoutine;
 
     private bool collectionStarted = false;
 
     void Start()
     {
-        foreach (var part in brokenBridge)
-            part.SetActive(true);
-
-        foreach (var part in completedBridge)
-            part.SetActive(false);
-
-        if (mysteriousPath) mysteriousPath.SetActive(false);
+        if (completedBridge) completedBridge.SetActive(false);
+        if (brokenBridge) brokenBridge.SetActive(false);
     }
+    /*
+    void Update()
+    {
+        if (isRunningCountdown)
+        {
+            currentTime -= Time.deltaTime;
+            Debug.Log($"⏱ Tiempo Restante: {currentTime:F2} s");
+
+            if (currentTime <= 0)
+            {
+                FinishCountdown();
+            }
+        }
+    }
+    */
 
     public void EnableBrokenBridge()
     {
-        foreach (var part in brokenBridge)
-            part.SetActive(true);
+        if (brokenBridge) brokenBridge.SetActive(true);
     }
 
     public void StartCollectionPhase()
     {
         collectionStarted = true;
+
+        //currentTime = countdown;
+        //isRunningCountdown = true;
+        Debug.Log($"Tienes {countdown} segundos para recolectar toda la madera");
+        countdownRoutine = StartCoroutine(StartCountdown());
     }
 
     public void AddWood()
@@ -42,25 +62,14 @@ public class CollectWoodMission : MonoBehaviour
 
         currentWood++;
         Debug.Log($"Madera Recolectada: {currentWood}/{requiredWood}");
-
-        if (currentWood <= completedBridge.Count)
-        {
-            completedBridge[currentWood - 1].SetActive(true);
-            brokenBridge[currentWood - 1].SetActive(false);
-        }
-
-        if (currentWood == requiredWood - 1)
-        {
-            Invoke(nameof(EnableMysteriousPath), 2f);
-        }
     }
 
-    public void EnableMysteriousPath()
+
+    public void DeliverWood()
     {
-        if (mysteriousPath)
+        if (currentWood >= requiredWood)
         {
-            Debug.Log("Un nuevo camino se abre entre los �rboles... (camino alternativo)");
-            mysteriousPath.SetActive(true);
+            CompleteMission();
         }
     }
 
@@ -69,14 +78,34 @@ public class CollectWoodMission : MonoBehaviour
         return currentWood >= requiredWood;
     }
 
+    private IEnumerator StartCountdown()
+    {
+        float currentTime = countdown;
+
+        while (currentTime > 0)
+        {
+            Debug.Log($"⏱ Tiempo restante: {currentTime:F2} s");
+            currentTime -= Time.deltaTime;
+            yield return null;
+        }
+
+        FinishCountdown();
+    }
+
     public void CompleteMission()
     {
-        foreach (var part in brokenBridge)
-            part.SetActive(true);
+        if (countdownRoutine != null)
+            StopCoroutine(countdownRoutine);
 
-        foreach (var part in completedBridge)
-            part.SetActive(true);
+        if (completedBridge) completedBridge.SetActive(true);
+        Debug.Log("Has reconstruido el puente. ¡Puedes cruzar!");
+    }
 
-        Debug.Log("Has reconstruido el puente. �Puedes cruzar!");
+    public void FinishCountdown() { 
+    
+        //isRunningCountdown = false;
+        collectionStarted = false;
+
+        Debug.Log("Se acabo el tiempo");
     }
 }
