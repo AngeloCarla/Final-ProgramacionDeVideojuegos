@@ -48,7 +48,7 @@ public class InteractionSystem : MonoBehaviour
                 }
                 else if (rotating != null)
                 {
-                    rotating.RotationPiece();
+                    rotating.Interact();
                     DeselectCurrent();
                 }
                 else if (torch != null)
