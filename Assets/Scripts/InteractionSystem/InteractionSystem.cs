@@ -23,12 +23,13 @@ public class InteractionSystem : MonoBehaviour
         {
             var pickUp = hit.collider.GetComponent<PickUpObject>(); // Busca el componente para recoger
             var delivery = hit.collider.GetComponent<WoodDelivery>(); // Busca si es para entregar 
+            var rotating = hit.collider.GetComponent<RotatingPiece>(); // Si rota la pieza
 
             // Si se apunta a un nuevo objeto, actualiza la seleccion
             if (hit.transform != currentSelection)
             {
                 DeselectCurrent();
-                SelectObject(hit.transform, pickUp, delivery);
+                SelectObject(hit.transform, pickUp, delivery, rotating);
             }
 
             // --- Interaccion ---
@@ -44,6 +45,11 @@ public class InteractionSystem : MonoBehaviour
                     delivery.RepairBridge(); // Ejecuta la accion al entregar
                     DeselectCurrent();
                 }
+                else if (rotating != null)
+                {
+                    rotating.RotationPiece();
+                    DeselectCurrent();
+                }
             }
         }
         else
@@ -52,7 +58,7 @@ public class InteractionSystem : MonoBehaviour
         }
     }
 
-    void SelectObject(Transform transform, PickUpObject pickUp, WoodDelivery delivery)
+    void SelectObject(Transform transform, PickUpObject pickUp, WoodDelivery delivery, RotatingPiece rotating)
     {
         currentSelection = transform;
 
@@ -65,6 +71,11 @@ public class InteractionSystem : MonoBehaviour
         else if (delivery != null)
         {
             Debug.Log($"{delivery.gameObject.name}");
+        }
+        else if (rotating != null)
+        {
+            Debug.Log($"{rotating.gameObject.name}");
+
         }
     }
 
