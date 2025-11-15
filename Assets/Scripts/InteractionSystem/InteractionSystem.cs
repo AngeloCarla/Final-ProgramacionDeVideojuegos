@@ -24,12 +24,13 @@ public class InteractionSystem : MonoBehaviour
             var pickUp = hit.collider.GetComponent<PickUpObject>(); // Busca el componente para recoger
             var delivery = hit.collider.GetComponent<WoodDelivery>(); // Busca si es para entregar 
             var rotating = hit.collider.GetComponent<RotatingPiece>(); // Si rota la pieza
+            var torch = hit.collider.GetComponent<Torch>(); // Antorcha
 
             // Si se apunta a un nuevo objeto, actualiza la seleccion
             if (hit.transform != currentSelection)
             {
                 DeselectCurrent();
-                SelectObject(hit.transform, pickUp, delivery, rotating);
+                SelectObject(hit.transform, pickUp, delivery, rotating, torch);
             }
 
             // --- Interaccion ---
@@ -50,6 +51,11 @@ public class InteractionSystem : MonoBehaviour
                     rotating.RotationPiece();
                     DeselectCurrent();
                 }
+                else if (torch != null)
+                {
+                    torch.Interact();
+                    DeselectCurrent();
+                }
             }
         }
         else
@@ -58,7 +64,7 @@ public class InteractionSystem : MonoBehaviour
         }
     }
 
-    void SelectObject(Transform transform, PickUpObject pickUp, WoodDelivery delivery, RotatingPiece rotating)
+    void SelectObject(Transform transform, PickUpObject pickUp, WoodDelivery delivery, RotatingPiece rotating, Torch torch)
     {
         currentSelection = transform;
 
@@ -75,7 +81,10 @@ public class InteractionSystem : MonoBehaviour
         else if (rotating != null)
         {
             Debug.Log($"{rotating.gameObject.name}");
-
+        }
+        else if (torch != null)
+        {
+            Debug.Log($"{torch.gameObject.name}");
         }
     }
 
