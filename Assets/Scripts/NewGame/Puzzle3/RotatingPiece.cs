@@ -4,7 +4,7 @@ using UnityEngine;
 public class RotatingPiece : MonoBehaviour
 {
     [Header("Manager")]
-    [SerializeField] private Puzzle2Manager manager; // Manager
+    //[SerializeField] private Puzzle2Manager manager; // Manager
 
     [Header("Rotacion")]
     [SerializeField] private float rotationStep = 90f; // Cuanto gira la pieza
@@ -13,14 +13,14 @@ public class RotatingPiece : MonoBehaviour
 
     public void Start()
     {
-        manager = FindAnyObjectByType<Puzzle2Manager>();
+       // manager = FindAnyObjectByType<Puzzle2Manager>();
     }
 
     public void Interact()
     {
         transform.Rotate(0, rotationStep, 0); // Rota la pieza en Y según el paso definido
 
-        manager?.CheckPuzzle();
+       // manager?.CheckPuzzle();
     }
 
     public bool IsCorrect()

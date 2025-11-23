@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UIElements;
 
 public class InteractionSystem : MonoBehaviour
 {
@@ -23,7 +24,7 @@ public class InteractionSystem : MonoBehaviour
         {
             var pickUp = hit.collider.GetComponent<PickUpObject>(); // Busca el componente para recoger
             var delivery = hit.collider.GetComponent<WoodDelivery>(); // Busca si es para entregar 
-            var rotating = hit.collider.GetComponent<RotatingPiece>(); // Si rota la pieza
+            var rotate = hit.collider.GetComponent<Statue>(); // Si rota la pieza
             var torch = hit.collider.GetComponent<Torch>(); // Antorcha
             var key = hit.collider.GetComponent<Lock>();
 
@@ -31,7 +32,7 @@ public class InteractionSystem : MonoBehaviour
             if (hit.transform != currentSelection)
             {
                 DeselectCurrent();
-                SelectObject(hit.transform, pickUp, delivery, rotating, torch, key);
+                SelectObject(hit.transform, pickUp, delivery, rotate, torch, key);
             }
 
             // --- Interaccion ---
@@ -47,9 +48,9 @@ public class InteractionSystem : MonoBehaviour
                     delivery.RepairBridge(); // Ejecuta la accion al entregar
                     DeselectCurrent();
                 }
-                else if (rotating != null)
+                else if (rotate != null)
                 {
-                    rotating.Interact();
+                    rotate.RotateStatue();
                     DeselectCurrent();
                 }
                 else if (torch != null)
@@ -71,7 +72,7 @@ public class InteractionSystem : MonoBehaviour
     }
 
     void SelectObject(Transform transform, PickUpObject pickUp,
-        WoodDelivery delivery, RotatingPiece rotating, Torch torch, Lock key)
+        WoodDelivery delivery, Statue rotate, Torch torch, Lock key)
     {
         currentSelection = transform;
 
@@ -85,9 +86,9 @@ public class InteractionSystem : MonoBehaviour
         {
             Debug.Log($"{delivery.gameObject.name}");
         }
-        else if (rotating != null)
+        else if (rotate != null)
         {
-            Debug.Log($"{rotating.gameObject.name}");
+            Debug.Log($"{rotate.gameObject.name}");
         }
         else if (torch != null)
         {
