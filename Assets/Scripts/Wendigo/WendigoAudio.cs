@@ -2,76 +2,55 @@ using UnityEngine;
 
 public class WendigoAudio : MonoBehaviour
 {
-    #region Componentes & Referencias
-
+    [Header("Componentes")]
     private AudioSource audioSource;
 
-    #endregion
+    [Header("Audios")]
+    public AudioClip screamClip;
+    public AudioClip[] footstepClips;
 
-    #region Configuración
+    [Header("Configuración")]
+    public float footstepInterval = 0.5f;
+    private float nextFootstepTime;
 
-    [Header("Clips de Audio")]
-    public AudioClip screamSound;
-    public AudioClip footstepSound;
-
-    [Header("Configuración de Grito")]
-    [Tooltip("Tiempo inicial antes del primer grito")]
-    public float initialScreamDelay = 10f;
-    [Tooltip("Tiempo base entre gritos automáticos")]
-    public float baseScreamInterval = 30f;
-
-    #endregion
-
-    #region Lógica de Grito
-    private void PerformScream()
+    private void Awake()
     {
-        // 1. Ejecutar el audio
-        PlayScreamAudioOnly();
-
-        // 2. Determinar un nuevo intervalo con aleatoriedad
-        float randomDelay = Random.Range(0f, 15f);
-        float nextInterval = baseScreamInterval + randomDelay;
-
-        // 3. Reiniciar el ciclo con el nuevo tiempo aleatorio
-        Invoke("PerformScream", nextInterval);
-    }
-
-    private void PlayScreamAudioOnly()
-    {
-        if (screamSound != null && audioSource != null)
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
         {
-            audioSource.PlayOneShot(screamSound);
+            audioSource = gameObject.AddComponent<AudioSource>();
         }
-    }
-    #endregion
-
-    #region Monobehaviour Core
-    void Start()
-    {
-        Invoke("PerformScream", initialScreamDelay);
-    }
-    #endregion
-
-    #region Funciones de Reproducción (Llamadas Externamente)
-    public void PlayFootstep()
-    {
-        if (footstepSound != null && audioSource != null)
-        {
-            audioSource.PlayOneShot(footstepSound);
-        }
+        audioSource.spatialBlend = 1.0f;
     }
 
+    /// <summary>
+    /// Reproduce el sonido de grito. Llamado desde WendigoAI.cs
+    /// </summary>
     public void PlayScream()
     {
-        // 1. Si WendigoAI.cs quiere que grite, cancelamos el ciclo automático.
-        CancelInvoke("PerformScream");
-
-        // 2. Reproducimos el grito forzado
-        PlayScreamAudioOnly();
-
-        // 3. Reiniciamos el ciclo automático.
-        // Usa Invoke("PerformScream"...) para reanudar el ciclo recursivo.
-        Invoke("PerformScream", baseScreamInterval);
+        if (audioSource != null && screamClip != null)
+        {
+            audioSource.PlayOneShot(screamClip);
+        }
     }
-    #endregion
+
+    /// <summary>
+    /// Gestiona la reproducción de los pasos.
+    /// </summary>
+    public void HandleFootsteps(float speed)
+    {
+        // Solo reproduce si es el momento y hay clips de pasos
+        if (Time.time > nextFootstepTime && footstepClips.Length > 0)
+        {
+            // La velocidad del intervalo se ajusta a la velocidad de movimiento
+            // (a mayor velocidad, menor intervalo de tiempo)
+            float interval = footstepInterval / Mathf.Max(1f, speed / 3f);
+            nextFootstepTime = Time.time + interval;
+
+            // Elegir un clip de paso aleatorio
+            AudioClip clip = footstepClips[Random.Range(0, footstepClips.Length)];
+
+            audioSource.PlayOneShot(clip);
+        }
+    }
 }

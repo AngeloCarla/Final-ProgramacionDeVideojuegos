@@ -3,76 +3,113 @@ using UnityEngine.AI;
 
 public class WendigoAI : MonoBehaviour
 {
-    #region Components & References
-    // Componentes obligatorios
-    private NavMeshAgent agent; // << CORREGIDO: Usamos 'agent'
+    // --- COMPONENTES ---
+    private NavMeshAgent agent;
     private Animator animator;
     private WendigoAudio wendigoAudio;
 
-    // Referencia al jugador
     private Transform Player;
+    private CollectWoodMission gameManager;
 
-    // Parámetros de Animator
-    private readonly int isWalking = Animator.StringToHash("IsWalking");
+    // Animator Hash
+    private readonly int isWalking = Animator.StringToHash("isWalking");
     private readonly int doScream = Animator.StringToHash("Scream");
-    #endregion
+    private readonly int isRunning = Animator.StringToHash("isRunning");
 
-    #region Configuración
-    [Header("1. Movimiento y Rango")]
+    [Header("Movimiento y Velocidades")]
     public float patrolSpeed = 1.5f;
-    public float evadeSpeed = 2.5f;
-    [Tooltip("Radio máximo de búsqueda para puntos de patrullaje")]
+    public float runSpeed = 6f;
+    public float safeDistance = 30f;
     public float patrolRange = 50f;
 
-    [Header("2. Tiempos de Comportamiento")]
-    [Tooltip("Tiempo mínimo y máximo que el Wendigo espera en estado Idle")]
+    [Header("Tiempos de Comportamiento")]
     public float idleTimeMin = 3f;
     public float idleTimeMax = 6f;
-    [Tooltip("Delay después del grito antes de volver a caminar")]
     public float screamDelay = 1.5f;
 
-    [Header("3. Detección y Evasión")]
-    [Tooltip("Radio en el que detecta al jugador y comienza a evadir")]
-    public float detectionRadius = 15f;
-    [Tooltip("Distancia que intenta mantener lejos del jugador al evadir")]
-    public float evadeDistance = 20f;
-    #endregion
+    [Header("LÃ³gica Interna")]
+    public float stopDistance = 1.5f;
 
-    #region Máquina de Estados (Lógica Interna)
-    private AIState currentState = AIState.Walk;
-    private float stateTime; // Usado para temporizar estados (Idle, Scream)
-    private bool isEvading = false; // Cambia el comportamiento dentro de Walk
+    private Vector3 walkTarget;
+    public AIState currentState = AIState.Dormant;
+    private float stateTime;
 
-    private void SetState(AIState newState)
+    private readonly string PlayerTag = "Player";
+
+    // ============================================================
+    //   CAMBIO DE ESTADO
+    // ============================================================
+
+    public void SetState(AIState newState)
     {
         if (currentState == newState) return;
 
         currentState = newState;
 
-        // --- Inicialización del nuevo estado ---
+        // Reiniciar animaciones
+        animator.SetBool(isWalking, false);
+        animator.SetBool(isRunning, false);
+
+        // CONTROL DEL NAVMESH
+        if (agent != null)
+            agent.isStopped = true;
+
         switch (newState)
         {
+            case AIState.Dormant:
+                gameObject.SetActive(false);
+                break;
+
             case AIState.Walk:
-                agent.isStopped = false; // << CORREGIDO: Usa 'agent'
-                agent.speed = patrolSpeed; // << CORREGIDO: Usa 'agent'
-                GetNewPatrolPoint();
+                gameObject.SetActive(true);
+
+                // Evita errores de NavMesh
+                if (!EnsureOnNavmesh()) return;
+
                 animator.SetBool(isWalking, true);
+
+                agent.speed = patrolSpeed;
+                agent.isStopped = false;
+
+                GetNewPatrolPoint(safeDistance);
+                agent.SetDestination(walkTarget);
                 break;
 
             case AIState.Idle:
-                agent.isStopped = true; // << CORREGIDO: Usa 'agent'
                 animator.SetBool(isWalking, false);
+                if (agent != null) agent.isStopped = true;
                 stateTime = Time.time + Random.Range(idleTimeMin, idleTimeMax);
                 break;
 
             case AIState.Scream:
-                agent.isStopped = true; // << CORREGIDO: Usa 'agent'
-                animator.SetTrigger(doScream); // Activa la animación
-                wendigoAudio.PlayScream();    // Activa el audio
+                if (agent != null) agent.isStopped = true;
+                animator.SetTrigger(doScream);
+
+                if (wendigoAudio != null)
+                    wendigoAudio.PlayScream();
+
                 stateTime = Time.time + screamDelay;
+                break;
+
+            case AIState.Run:
+                gameObject.SetActive(true);
+
+                if (!EnsureOnNavmesh()) return;
+
+                animator.SetBool(isRunning, true);
+
+                if (wendigoAudio != null)
+                    wendigoAudio.PlayScream();
+
+                agent.speed = runSpeed;
+                agent.isStopped = false;
                 break;
         }
     }
+
+    // ============================================================
+    //   LÃ“GICA DE ESTADOS
+    // ============================================================
 
     private void HandleStateLogic()
     {
@@ -84,118 +121,134 @@ public class WendigoAI : MonoBehaviour
 
             case AIState.Idle:
                 if (Time.time >= stateTime)
-                {
                     SetState(AIState.Scream);
-                }
                 break;
 
             case AIState.Scream:
                 if (Time.time >= stateTime)
-                {
                     SetState(AIState.Walk);
-                }
+                break;
+
+            case AIState.Run:
+                if (Player != null && agent.isOnNavMesh)
+                    agent.SetDestination(Player.position);
                 break;
         }
     }
-    #endregion
 
-    #region Monobehaviour Core
+    // ============================================================
+    //   MONOBEHAVIOUR
+    // ============================================================
+
     private void Awake()
     {
-        // Obtención de componentes
-        agent = GetComponent<NavMeshAgent>(); // << CORREGIDO: Asigna a 'agent'
+        agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
         wendigoAudio = GetComponent<WendigoAudio>();
 
-        // Buscar al jugador (asumiendo Tag: "Player")
-        GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
-        if (playerObj != null)
-        {
-            Player = playerObj.transform;
-        }
+        gameManager = FindFirstObjectByType<CollectWoodMission>();
+        if (gameManager != null)
+            Player = gameManager.PlayerTransform;
 
-        SetState(AIState.Walk);
+        // --- Asegura que CAIGA sobre el NavMesh ---
+        EnsureOnNavmesh();
+
+        SetState(AIState.Dormant);
     }
 
     private void Update()
     {
-        // 1. Detección Global
-        if (Player != null)
-        {
-            float distanceToPlayer = Vector3.Distance(transform.position, Player.position);
+        if (currentState == AIState.Dormant)
+            return;
 
-            // Si detecta al jugador Y está en estado de movimiento
-            if (distanceToPlayer < detectionRadius && currentState == AIState.Walk)
-            {
-                isEvading = true;
-            }
-            // Si el jugador se va Y está en modo evasión
-            else if (distanceToPlayer > detectionRadius)
-            {
-                isEvading = false;
-            }
-        }
+        // Evita mil errores de NavMesh por 1 frame
+        if (!agent.isOnNavMesh)
+            return;
 
-        // 2. Ejecución de la lógica del estado actual
         HandleStateLogic();
+
+        // Sonido de pasos en Walk y Run
+        if (wendigoAudio != null)
+        {
+            if (currentState == AIState.Walk || currentState == AIState.Run)
+                wendigoAudio.HandleFootsteps(agent.velocity.magnitude);
+        }
     }
 
-    private void OnDrawGizmosSelected()
+    // ============================================================
+    //   COLISIÃ“N (GAME OVER)
+    // ============================================================
+
+    private void OnTriggerEnter(Collider other)
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRadius);
+        if (currentState == AIState.Run &&
+            other.CompareTag(PlayerTag))
+        {
+            if (agent != null) agent.isStopped = true;
+            animator.SetBool(isRunning, false);
+
+            if (gameManager != null)
+                gameManager.YouLose();
+        }
     }
 
-    #endregion
+    // ============================================================
+    //   LÃ“GICA DE MOVIMIENTO
+    // ============================================================
 
-    #region Lógica de Movimiento
     private void WalkLogic()
     {
-        if (isEvading)
+        if (!agent.isOnNavMesh)
+            return;
+
+        if (!agent.pathPending && agent.remainingDistance <= stopDistance)
         {
-            // --- Evasión ---
-            agent.speed = evadeSpeed; // << CORREGIDO: Usa 'agent'
-
-            // Calcula la dirección opuesta al jugador
-            Vector3 directionFromPlayer = transform.position - Player.position;
-            Vector3 evadeTarget = transform.position + directionFromPlayer.normalized * evadeDistance;
-
-            NavMeshHit hit;
-            if (NavMesh.SamplePosition(evadeTarget, out hit, evadeDistance, NavMesh.AllAreas))
-            {
-                agent.SetDestination(hit.position); // << CORREGIDO: Usa 'agent'
-            }
-        }
-        else
-        {
-            // --- Patrullaje (Deambulación) ---
-            agent.speed = patrolSpeed; // << CORREGIDO: Usa 'agent'
-
-            // Si el agente llegó a su destino, cambia a Idle
-            if (!agent.pathPending && agent.remainingDistance < 1f) // << CORREGIDO: Usa 'agent'
-            {
-                SetState(AIState.Idle);
-            }
-            // Pequeño chequeo adicional por si se queda atascado en el destino
-            else if (agent.remainingDistance <= 1f && !agent.hasPath) // << CORREGIDO: Usa 'agent'
-            {
-                GetNewPatrolPoint();
-            }
+            SetState(AIState.Idle);
         }
     }
 
-    private void GetNewPatrolPoint()
+    private void GetNewPatrolPoint(float minDistance = 0f)
     {
-        Vector3 randomDirection = Random.insideUnitSphere * patrolRange;
-        randomDirection += transform.position;
-        NavMeshHit hit;
+        Vector3 randomDirection;
+        Vector3 candidate;
+        int attempts = 0;
 
-        // Encuentra el punto más cercano válido en el NavMesh
-        if (NavMesh.SamplePosition(randomDirection, out hit, patrolRange, NavMesh.AllAreas))
+        do
         {
-            agent.SetDestination(hit.position); // << CORREGIDO: Usa 'agent'
-        }
+            randomDirection = Random.insideUnitSphere * patrolRange;
+            candidate = transform.position + randomDirection;
+            attempts++;
+
+        } while (Vector3.Distance(candidate, Player.position) < minDistance &&
+                 attempts < 10);
+
+        walkTarget = new Vector3(candidate.x, transform.position.y, candidate.z);
+
+        if (agent.isOnNavMesh)
+            agent.SetDestination(walkTarget);
     }
 
-    #endregion
+    // ============================================================
+    //   UTILIDAD: asegurar que el agente estÃ© sobre un NavMesh vÃ¡lido
+    // ============================================================
+
+    private bool EnsureOnNavmesh()
+    {
+        NavMeshHit hit;
+        if (NavMesh.SamplePosition(transform.position, out hit, 3f, NavMesh.AllAreas))
+        {
+            transform.position = hit.position;
+
+            // Para evitar que se quede "desactivado"
+            if (!agent.isOnNavMesh)
+            {
+                agent.Warp(hit.position);
+            }
+
+            return true;
+        }
+
+        Debug.LogError("Wendigo no puede colocarse sobre el NavMesh.");
+        return false;
+    }
 }
