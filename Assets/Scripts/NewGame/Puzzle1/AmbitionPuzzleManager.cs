@@ -73,7 +73,8 @@ public class AmbitionPuzzleManager : MonoBehaviour
 
     public void PuzzleCompleted()
     {
-        Debug.Log("Felicidades");
+        completed = true;
         door.SetActive(false); // Se abre la puerta (Para recoger la llave)
+        Debug.Log("Felicidades");
     }
 }
