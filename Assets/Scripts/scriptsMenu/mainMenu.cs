@@ -11,8 +11,7 @@ public class MenuController : MonoBehaviour
     // --- Botones del Main Menu ---
     public void Jugar()
     {
-        // Cambiar a la escena del juego
-        SceneManager.LoadScene("ggggggggggggggg"); // <-- poné el nombre exacto de tu escena
+        SceneManager.LoadScene("Tutorial");
     }
 
     public void AbrirOpciones()
