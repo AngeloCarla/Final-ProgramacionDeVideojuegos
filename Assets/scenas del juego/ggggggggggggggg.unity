@@ -282,7 +282,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectName: Objeto
-  isWood: 0
   isExtra: 0
 --- !u!65 &72380296
 BoxCollider:
@@ -2118,7 +2117,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectName: Objeto
-  isWood: 0
   isExtra: 0
 --- !u!135 &420483350
 SphereCollider:
@@ -2258,7 +2256,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectName: Objeto
-  isWood: 0
   isExtra: 1
 --- !u!135 &437415783
 SphereCollider:
@@ -2732,7 +2729,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4708c072fbb8c0944b8182c3650c3cc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isImpossible: 0
+  manager: {fileID: 1678310344}
 --- !u!65 &544308758
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4132,7 +4129,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectName: Objeto
-  isWood: 0
   isExtra: 1
 --- !u!135 &778758457
 SphereCollider:
@@ -4271,7 +4267,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectName: Objeto
-  isWood: 1
   isExtra: 0
 --- !u!65 &795268157
 BoxCollider:
@@ -4379,7 +4374,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4708c072fbb8c0944b8182c3650c3cc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isImpossible: 1
+  manager: {fileID: 1678310344}
 --- !u!65 &795474755
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -4594,7 +4589,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4708c072fbb8c0944b8182c3650c3cc8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isImpossible: 0
+  manager: {fileID: 1678310344}
 --- !u!1 &869206977
 GameObject:
   m_ObjectHideFlags: 0
@@ -6429,7 +6424,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectName: Objeto
-  isWood: 0
   isExtra: 0
 --- !u!135 &1389005195
 SphereCollider:
@@ -8011,7 +8005,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectName: Objeto
-  isWood: 0
   isExtra: 0
 --- !u!135 &1623875674
 SphereCollider:
@@ -8824,7 +8817,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectName: Objeto
-  isWood: 1
   isExtra: 0
 --- !u!65 &1786673953
 BoxCollider:
@@ -10600,7 +10592,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectName: Objeto
-  isWood: 1
   isExtra: 0
 --- !u!65 &2062386950
 BoxCollider:
