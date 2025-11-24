@@ -14,8 +14,8 @@ public class CollectWoodMission : MonoBehaviour
 
     [Header("Timer")]
     [SerializeField] private float countdown = 10;
-    private float currentTime = 0;
-    private bool isRunningCountdown = false;
+    //private float currentTime = 0;
+    //private bool isRunningCountdown = false;
     private Coroutine countdownRoutine;
 
     private bool collectionStarted = false;
