@@ -22,45 +22,22 @@ public class InteractionSystem : MonoBehaviour
         // Lanza el raycast: (origen, dirección, salida del impacto, distancia, capa)
         if (Physics.Raycast(ray, out hit, dist, mask))
         {
-            var pickUp = hit.collider.GetComponent<PickUpObject>(); // Busca el componente para recoger
-            var delivery = hit.collider.GetComponent<WoodDelivery>(); // Busca si es para entregar 
-            var rotate = hit.collider.GetComponent<Statue>(); // Si rota la pieza
-            var torch = hit.collider.GetComponent<Torch>(); // Antorcha
-            var key = hit.collider.GetComponent<Lock>();
+            // Todo objeto interactuable debe heredar la interfaz IInteractable
+            IInteractable interactable = hit.collider.GetComponent<IInteractable>();
 
             // Si se apunta a un nuevo objeto, actualiza la seleccion
             if (hit.transform != currentSelection)
             {
                 DeselectCurrent();
-                SelectObject(hit.transform, pickUp, delivery, rotate, torch, key);
+                SelectObject(hit.transform, interactable);
             }
 
             // --- Interaccion ---
-            if (Input.GetKeyDown(KeyCode.E) || Input.GetMouseButtonDown(0))
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                if (pickUp != null)
+                if (interactable != null)
                 {
-                    pickUp.PickUp(); // Ejecuta la accion de recoger
-                    DeselectCurrent();
-                }
-                else if (delivery != null)
-                {
-                    delivery.RepairBridge(); // Ejecuta la accion al entregar
-                    DeselectCurrent();
-                }
-                else if (rotate != null)
-                {
-                    rotate.RotateStatue();
-                    DeselectCurrent();
-                }
-                else if (torch != null)
-                {
-                    torch.Interact();
-                    DeselectCurrent();
-                }
-                else if (key != null)
-                {
-                    key.Interact();
+                    interactable.Interact(); // Ejecuta la accion
                     DeselectCurrent();
                 }
             }
@@ -71,32 +48,15 @@ public class InteractionSystem : MonoBehaviour
         }
     }
 
-    void SelectObject(Transform transform, PickUpObject pickUp,
-        WoodDelivery delivery, Statue rotate, Torch torch, Lock key)
+    void SelectObject(Transform transform, IInteractable interactable)
     {
         currentSelection = transform;
 
         // Muestra en la consola el nombre del objeto al que se esta apuntando
         // (Mientras este en el layer RayCastDetect)
-        if (pickUp != null)
+        if (interactable != null)
         {
-            Debug.Log($"{pickUp.objectName}");
-        }
-        else if (delivery != null)
-        {
-            Debug.Log($"{delivery.gameObject.name}");
-        }
-        else if (rotate != null)
-        {
-            Debug.Log($"{rotate.gameObject.name}");
-        }
-        else if (torch != null)
-        {
-            Debug.Log($"{torch.gameObject.name}");
-        }
-        else if (key != null)
-        {
-            Debug.Log($"{key.gameObject.name}");
+            Debug.Log(transform.name);
         }
     }
     void DeselectCurrent()

@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Statue : MonoBehaviour
+public class Statue : MonoBehaviour, IInteractable
 {
     [Header("Manager")]
     [SerializeField] private ControlPuzzleManager manager; // Manager del puzzle
@@ -41,7 +41,11 @@ public class Statue : MonoBehaviour
             yield return null;
         }
 
-        transform.eulerAngles = new Vector3 (0, target, 0); // Deja exacto el angulo
+        transform.eulerAngles = new Vector3(0, target, 0); // Deja exacto el angulo
     }
 
+    public void Interact()
+    {
+        RotateStatue();
+    }
 }

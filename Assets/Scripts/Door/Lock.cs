@@ -2,7 +2,7 @@ using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Lock : MonoBehaviour
+public class Lock : MonoBehaviour, IInteractable
 {
     [Header("Candado")]
     [SerializeField] private int id; // Id que coincide con su llave
