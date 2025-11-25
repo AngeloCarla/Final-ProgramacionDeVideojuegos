@@ -104,7 +104,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 0.97198784, y: 0.95594263, z: 0.9172579}
   m_Center: {x: -0.010877609, y: 0.043023467, z: -0.0071383417}
@@ -242,11 +242,11 @@ LODGroup:
   m_AnimateCrossFading: 0
   m_LastLODIsBillboard: 0
   m_LODs:
-  - screenRelativeHeight: 0.07415994
+  - screenRelativeHeight: 0.11394224
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 8008884292870391736}
-  - screenRelativeHeight: 0.0324763
+  - screenRelativeHeight: 0.07225428
     fadeTransitionWidth: 0
     renderers:
     - renderer: {fileID: 6984404637560846908}
