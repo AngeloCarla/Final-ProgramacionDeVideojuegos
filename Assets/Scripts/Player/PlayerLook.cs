@@ -2,22 +2,33 @@ using UnityEngine;
 
 public class PlayerLook : MonoBehaviour
 {
-    [Header("Camara del jugador")]
+    [Header("Cámara del jugador")]
     [SerializeField] private Camera playerCamera;
 
     [Header("Opciones")]
-    [SerializeField] private float sensitivity; // Sensibilidad del mouse
-    private float vRotation = 0f; // Rotacion Vertical
-    void Update()
-    {
-        // --- Rotacion ---
-        // Eje X: rota el cuerpo del jugador horizontalmente (izquierda/derecha con el mouse)
-        float mouseX = Input.GetAxis("Mouse X") * sensitivity;
-        transform.Rotate(0, mouseX, 0);
+    [SerializeField] private float sensitivity = 300f;
 
-        // Eje Y: rota la c�mara verticalmente (mirar arriba/abajo con el mouse)
-        vRotation -= Input.GetAxis("Mouse Y") * sensitivity;
-        vRotation = Mathf.Clamp(vRotation, -60f, 60f); // Limite la rotacion vertical
+    private float vRotation = 0f;
+    private Rigidbody rb;
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody>();
+        rb.freezeRotation = true; // Previene rotaciones físicas no deseadas
+    }
+
+    private void Update()
+    {
+        float mouseX = Input.GetAxis("Mouse X") * sensitivity * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * sensitivity * Time.deltaTime;
+
+        // Rotación vertical (solo cámara)
+        vRotation -= mouseY;
+        vRotation = Mathf.Clamp(vRotation, -60f, 60f);
         playerCamera.transform.localRotation = Quaternion.Euler(vRotation, 0, 0);
+
+        // Rotación horizontal (CUERPO usando Rigidbody)
+        Quaternion deltaRotation = Quaternion.Euler(0, mouseX, 0);
+        rb.MoveRotation(rb.rotation * deltaRotation);
     }
 }
