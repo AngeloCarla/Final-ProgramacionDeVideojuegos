@@ -1,19 +1,24 @@
+<<<<<<< HEAD
 ﻿using System.Windows.Input;
+=======
+>>>>>>> 48048ab118bb16bfffee530b1da36803a1c2da18
 using UnityEngine;
-using UnityEngine.Rendering;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private CharacterController cc;
+    [Header("Movimiento")]
+    public float walkSpeed = 12f;
+    public float runSpeed = 21f;
+    private float currentSpeed;
 
-    [Header("Movimiento del Personaje")]
-    [SerializeField] private float walkSpeed = 6.0f; // Velocidad al caminar
-    [SerializeField] private float runSpeed = 10.0f; // Velocidad al correr
+    [Header("Salto")]
+    public float jumpForce = 21f;
+    public LayerMask groundMask;
 
-    [Header("Salto del Personaje (prueba)")]
-    [SerializeField] private float jumpForce = 8.0f; // Impulso de salto
-    [SerializeField] private float gravity = 20.0f; // Gravedad
+    [Header("Componentes")]
+    private Rigidbody rb;
 
+<<<<<<< HEAD
     [Header("Audio de Movimiento")]
     public AudioSource audioSource;
     public AudioClip walkStep;   // sonido al caminar
@@ -22,20 +27,24 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     private IMovementStrategy strategy;
     private ICommand command;
+=======
+    [Header("Estado del tutorial")]
+    public bool movementLocked = true; // El tutorial controla esto
+>>>>>>> 48048ab118bb16bfffee530b1da36803a1c2da18
 
-    void Start()
+    private void Start()
     {
-        cc = GetComponent<CharacterController>();
-        strategy = new WalkMovement(walkSpeed);
+        rb = GetComponent<Rigidbody>();
+
+        rb.freezeRotation = true; // evita rotaciones raras
+        currentSpeed = walkSpeed;
     }
 
-    void Update()
+    private void Update()
     {
-        // --- Movimiento ---
-
-        // Controla movimiento si el jugador esta en el suelo
-        if (cc.isGrounded)
+        if (movementLocked)
         {
+<<<<<<< HEAD
             // Determina la velocidad actual (Shift para correr, sino caminar)
             strategy = Input.GetKey(KeyCode.LeftShift) // condición ? si-es-verdadero : si-es-falso
                 ? new RunMovement(runSpeed) : new WalkMovement(walkSpeed);
@@ -47,11 +56,18 @@ public class PlayerMovement : MonoBehaviour
             // Salto (tecla Espacio)
             if (Input.GetButton("Jump"))
                 moveDirection.y = jumpForce;
+=======
+            // Bloquea el movimiento sin afectar gravedad
+            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
+            return;
+>>>>>>> 48048ab118bb16bfffee530b1da36803a1c2da18
         }
 
-        // Aplicar gravedad constantemente
-        moveDirection.y -= gravity * Time.deltaTime;
+        HandleMovementInput();
+        HandleJump();
+    }
 
+<<<<<<< HEAD
         // Mover al jugador
         command = new MoveCommand(cc, moveDirection);
         command.Execute();
@@ -101,5 +117,35 @@ public class PlayerMovement : MonoBehaviour
             audioSource.clip = targetClip;
             audioSource.Play();
         }
+=======
+    private void HandleMovementInput()
+    {
+        float x = Input.GetAxisRaw("Horizontal"); // A-D
+        float z = Input.GetAxisRaw("Vertical");   // W-S
+
+        Vector3 move = (transform.right * x + transform.forward * z).normalized;
+
+        // Correr con SHIFT
+        currentSpeed = (Input.GetKey(KeyCode.LeftShift) && z > 0)
+            ? runSpeed
+            : walkSpeed;
+
+        Vector3 vel = new Vector3(move.x * currentSpeed, rb.linearVelocity.y, move.z * currentSpeed);
+        rb.linearVelocity = vel;
+    }
+
+    private void HandleJump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
+            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        }
+    }
+
+    private bool IsGrounded()
+    {
+        return Physics.Raycast(transform.position, Vector3.down, 1.1f, groundMask);
+>>>>>>> 48048ab118bb16bfffee530b1da36803a1c2da18
     }
 }
