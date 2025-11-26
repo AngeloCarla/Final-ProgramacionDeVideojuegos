@@ -6,7 +6,7 @@ public class PlayerLook : MonoBehaviour
     [SerializeField] private Camera playerCamera;
 
     [Header("Opciones")]
-    [SerializeField] private float sensitivity = 300f;
+    [SerializeField][Range(0, 100)] private float sensitivity;
 
     private float vRotation = 0f;
     private Rigidbody rb;
