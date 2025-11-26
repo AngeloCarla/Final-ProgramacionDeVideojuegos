@@ -19,10 +19,6 @@ public class PlayerMovement : MonoBehaviour
     public AudioClip walkStep;   // sonido al caminar
     public AudioClip runStep;    // sonido al correr
 
-    private float stepTimer = 0f;
-    private float stepRateWalk = 0.5f;
-    private float stepRateRun = 0.3f;
-
     private Vector3 moveDirection = Vector3.zero;
     private IMovementStrategy strategy;
     private ICommand command;
@@ -64,36 +60,46 @@ public class PlayerMovement : MonoBehaviour
     }
     void HandleFootsteps()
     {
-        if (!cc.isGrounded)
+        // 1. Condición de No Movimiento
+
+        // Primero, verifica si el jugador no está en el suelo o no tiene input de movimiento.
+        // Usaremos el movimiento horizontal (X y Z) en lugar de las teclas, que es más limpio.
+
+        // El 'moveDirection' ya contiene la dirección de movimiento horizontal del jugador
+        // si el jugador presionó W, A, S o D.
+        bool isMoving = (moveDirection.x != 0 || moveDirection.z != 0) && cc.isGrounded;
+
+        if (!isMoving)
         {
-            stepTimer = 0;
-            return;
+            // Si no se está moviendo, y el audio está sonando, detenlo inmediatamente.
+            if (audioSource.isPlaying)
+            {
+                audioSource.Stop();
+            }
+            return; // Sal de la función Update
         }
 
-        // Entrada real del jugador
-        bool hasInput =
-            Input.GetKey(KeyCode.W) ||
-            Input.GetKey(KeyCode.A) ||
-            Input.GetKey(KeyCode.S) ||
-            Input.GetKey(KeyCode.D);
-
-        if (!hasInput)
-        {
-            stepTimer = 0;
-            return;
-        }
+        // 2. Control de Reproducción (Si el jugador se está moviendo)
 
         bool isRunning = Input.GetKey(KeyCode.LeftShift);
 
-        float currentRate = isRunning ? 0.24f : 0.38f;
-        AudioClip clip = isRunning ? runStep : walkStep;
+        AudioClip targetClip = isRunning ? runStep : walkStep;
 
-        stepTimer += Time.deltaTime;
-
-        if (stepTimer >= currentRate)
+        // Si el AudioSource no está sonando AHORA
+        if (!audioSource.isPlaying)
         {
-            audioSource.PlayOneShot(clip);
-            stepTimer = 0f;
+            // Asigna el audio de destino y comienza a reproducirlo.
+            audioSource.clip = targetClip;
+            audioSource.loop = true; // Importante: Aségurate de que haga loop
+            audioSource.Play();
+        }
+        // Si el AudioSource SÍ está sonando, pero necesita cambiar de audio (de caminar a correr o viceversa)
+        else if (audioSource.clip != targetClip)
+        {
+            // Detiene la reproducción actual, asigna el nuevo clip y comienza a sonar.
+            audioSource.Stop();
+            audioSource.clip = targetClip;
+            audioSource.Play();
         }
     }
 }
