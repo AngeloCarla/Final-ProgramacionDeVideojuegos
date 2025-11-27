@@ -7,12 +7,12 @@ public class GuiltItem : MonoBehaviour, IInteractable
     [SerializeField] private bool isHeld = false;
 
     private Rigidbody rb;
-    private Collider collider;
+    //private Collider collider;
 
     public void Start()
     {
         rb = GetComponent<Rigidbody>();
-        collider = GetComponent<Collider>();
+       // collider = GetComponent<Collider>();
     }
 
     public void Interact()
@@ -35,7 +35,7 @@ public class GuiltItem : MonoBehaviour, IInteractable
         transform.localPosition = Vector3.zero;
         transform.localRotation = Quaternion.identity;
         rb.isKinematic = true;
-        collider.enabled = false;
+       // collider.enabled = false;
     }
 
     public void Drop()
@@ -44,6 +44,6 @@ public class GuiltItem : MonoBehaviour, IInteractable
 
         transform.SetParent(null);
         rb.isKinematic = false;
-        collider.enabled = true;
+       // collider.enabled = true;
     }
 }
