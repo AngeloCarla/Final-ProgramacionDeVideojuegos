@@ -4439,6 +4439,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1436727960}
   - component: {fileID: 1436727961}
+  - component: {fileID: 1436727962}
   m_Layer: 6
   m_Name: PointKey
   m_TagString: Untagged
@@ -4476,12 +4477,27 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1436727962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436727959}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90619dce40f66784694bee66fabd177c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  manager: {fileID: 1746556013}
+  key: {fileID: 76414851944988432, guid: ce72ab44d9548ca44980c8cbe83bdd4f, type: 3}
+  pedestal: {fileID: 1436727960}
 --- !u!1 &1444219993
 GameObject:
   m_ObjectHideFlags: 0
