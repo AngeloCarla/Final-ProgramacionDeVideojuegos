@@ -28,7 +28,6 @@ public class AmbitionPedestal : MonoBehaviour, IInteractable
     public void DeliverKey()
     {
         delivered = true;
-
         Instantiate(key, pedestal.position, pedestal.rotation);
     }
 }

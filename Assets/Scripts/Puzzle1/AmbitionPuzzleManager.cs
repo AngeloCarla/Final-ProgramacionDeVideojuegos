@@ -5,7 +5,7 @@ public class AmbitionPuzzleManager : MonoBehaviour
 {
     [Header("Fragmento y puerta")]
     [SerializeField] private GameObject[] extraFragments; // Fragmentos extra
-   // [SerializeField] private GameObject door; // Puerta donde esta la llave
+                                                          // [SerializeField] private GameObject door; // Puerta donde esta la llave
 
     private int requiredFragments = 5; // Fragmentos que debe recoger
     private int collectedFragments = 0; // Fragmentos recolectados
@@ -23,6 +23,7 @@ public class AmbitionPuzzleManager : MonoBehaviour
         }
 
         collectedFragments++; // Recolecta fragmentos
+        Debug.Log($"Recolectaste {collectedFragments} de {requiredFragments}");
 
         if (collectedFragments == requiredFragments && !completed) // Si llega al total
         {
@@ -74,8 +75,8 @@ public class AmbitionPuzzleManager : MonoBehaviour
     public void PuzzleCompleted()
     {
         completed = true;
-       // door.SetActive(false); // Se abre la puerta (Para recoger la llave)
-        Debug.Log("Felicidades");
+        // door.SetActive(false); // Se abre la puerta (Para recoger la llave)
+        Debug.Log("Superaste el desafio y obtuviste una llave, Felicidades!");
     }
 
     public bool IsCompleted => completed;
