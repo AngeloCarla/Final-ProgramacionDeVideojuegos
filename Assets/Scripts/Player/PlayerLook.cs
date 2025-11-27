@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerLook : MonoBehaviour
 {
-    [Header("Cámara del jugador")]
+    [Header("Camara del jugador")]
     [SerializeField] private Camera playerCamera;
 
     [Header("Opciones")]
