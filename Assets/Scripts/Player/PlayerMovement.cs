@@ -1,24 +1,17 @@
-<<<<<<< HEAD
-﻿using System.Windows.Input;
-=======
->>>>>>> 48048ab118bb16bfffee530b1da36803a1c2da18
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [Header("Movimiento")]
-    public float walkSpeed = 12f;
-    public float runSpeed = 21f;
-    private float currentSpeed;
+    private CharacterController cc;
 
-    [Header("Salto")]
-    public float jumpForce = 21f;
-    public LayerMask groundMask;
+    [Header("Movimiento del Personaje")]
+    [SerializeField] private float walkSpeed = 6.0f; // Velocidad al caminar
+    [SerializeField] private float runSpeed = 10.0f; // Velocidad al correr
 
-    [Header("Componentes")]
-    private Rigidbody rb;
+    [Header("Salto del Personaje (prueba)")]
+    [SerializeField] private float jumpForce = 8.0f; // Impulso de salto
+    [SerializeField] private float gravity = 20.0f; // Gravedad
 
-<<<<<<< HEAD
     [Header("Audio de Movimiento")]
     public AudioSource audioSource;
     public AudioClip walkStep;   // sonido al caminar
@@ -27,24 +20,31 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     private IMovementStrategy strategy;
     private ICommand command;
-=======
-    [Header("Estado del tutorial")]
-    public bool movementLocked = true; // El tutorial controla esto
->>>>>>> 48048ab118bb16bfffee530b1da36803a1c2da18
+    public bool movementLocked = false;
 
-    private void Start()
+    void Start()
     {
-        rb = GetComponent<Rigidbody>();
-
-        rb.freezeRotation = true; // evita rotaciones raras
-        currentSpeed = walkSpeed;
+        cc = GetComponent<CharacterController>();
+        strategy = new WalkMovement(walkSpeed);
     }
 
-    private void Update()
+    void Update()
     {
+        // --- Movimiento ---
+
+        // Aplicar gravedad constantemente
+        moveDirection.y -= gravity * Time.deltaTime;
+
         if (movementLocked)
         {
-<<<<<<< HEAD
+            // Si el movimiento está bloqueado, aún debe aplicarse la gravedad
+            command = new MoveCommand(cc, moveDirection);
+            command.Execute();
+            return;
+        }
+
+        if (cc.isGrounded)
+        {
             // Determina la velocidad actual (Shift para correr, sino caminar)
             strategy = Input.GetKey(KeyCode.LeftShift) // condición ? si-es-verdadero : si-es-falso
                 ? new RunMovement(runSpeed) : new WalkMovement(walkSpeed);
@@ -56,18 +56,14 @@ public class PlayerMovement : MonoBehaviour
             // Salto (tecla Espacio)
             if (Input.GetButton("Jump"))
                 moveDirection.y = jumpForce;
-=======
-            // Bloquea el movimiento sin afectar gravedad
-            rb.linearVelocity = new Vector3(0, rb.linearVelocity.y, 0);
-            return;
->>>>>>> 48048ab118bb16bfffee530b1da36803a1c2da18
+
+            // Reiniciar Y cuando está en el suelo (para evitar acumulación de gravedad)
+            if (moveDirection.y < 0)
+            {
+                moveDirection.y = -0.5f; // Fuerza mínima para mantener el contacto
+            }
         }
 
-        HandleMovementInput();
-        HandleJump();
-    }
-
-<<<<<<< HEAD
         // Mover al jugador
         command = new MoveCommand(cc, moveDirection);
         command.Execute();
@@ -76,13 +72,7 @@ public class PlayerMovement : MonoBehaviour
     }
     void HandleFootsteps()
     {
-        // 1. Condición de No Movimiento
 
-        // Primero, verifica si el jugador no está en el suelo o no tiene input de movimiento.
-        // Usaremos el movimiento horizontal (X y Z) en lugar de las teclas, que es más limpio.
-
-        // El 'moveDirection' ya contiene la dirección de movimiento horizontal del jugador
-        // si el jugador presionó W, A, S o D.
         bool isMoving = (moveDirection.x != 0 || moveDirection.z != 0) && cc.isGrounded;
 
         if (!isMoving)
@@ -95,7 +85,7 @@ public class PlayerMovement : MonoBehaviour
             return; // Sal de la función Update
         }
 
-        // 2. Control de Reproducción (Si el jugador se está moviendo)
+        // 2. Control de Reproducción
 
         bool isRunning = Input.GetKey(KeyCode.LeftShift);
 
@@ -104,12 +94,11 @@ public class PlayerMovement : MonoBehaviour
         // Si el AudioSource no está sonando AHORA
         if (!audioSource.isPlaying)
         {
-            // Asigna el audio de destino y comienza a reproducirlo.
             audioSource.clip = targetClip;
-            audioSource.loop = true; // Importante: Aségurate de que haga loop
+            audioSource.loop = true;
             audioSource.Play();
         }
-        // Si el AudioSource SÍ está sonando, pero necesita cambiar de audio (de caminar a correr o viceversa)
+        // Si el AudioSource SÍ está sonando, pero necesita cambiar de audio
         else if (audioSource.clip != targetClip)
         {
             // Detiene la reproducción actual, asigna el nuevo clip y comienza a sonar.
@@ -117,35 +106,5 @@ public class PlayerMovement : MonoBehaviour
             audioSource.clip = targetClip;
             audioSource.Play();
         }
-=======
-    private void HandleMovementInput()
-    {
-        float x = Input.GetAxisRaw("Horizontal"); // A-D
-        float z = Input.GetAxisRaw("Vertical");   // W-S
-
-        Vector3 move = (transform.right * x + transform.forward * z).normalized;
-
-        // Correr con SHIFT
-        currentSpeed = (Input.GetKey(KeyCode.LeftShift) && z > 0)
-            ? runSpeed
-            : walkSpeed;
-
-        Vector3 vel = new Vector3(move.x * currentSpeed, rb.linearVelocity.y, move.z * currentSpeed);
-        rb.linearVelocity = vel;
-    }
-
-    private void HandleJump()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
-        {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z);
-            rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-        }
-    }
-
-    private bool IsGrounded()
-    {
-        return Physics.Raycast(transform.position, Vector3.down, 1.1f, groundMask);
->>>>>>> 48048ab118bb16bfffee530b1da36803a1c2da18
     }
 }

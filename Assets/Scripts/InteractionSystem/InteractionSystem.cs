@@ -4,7 +4,7 @@ using UnityEngine.UIElements;
 public class InteractionSystem : MonoBehaviour
 {
     LayerMask mask; // Capa que define los objetos a detectar
-    private float dist = 5f; // Distancia maxima para interacuar
+    private float dist = 8f; // Distancia maxima para interacuar
     private Transform currentSelection; // Ultimo objeto detectado
 
     void Start()
