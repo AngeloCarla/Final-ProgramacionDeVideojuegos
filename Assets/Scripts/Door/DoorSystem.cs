@@ -26,6 +26,8 @@ public class DoorSystem : MonoBehaviour
             keys[id] = true; // Marca en el array
             keyCollected++; // Suma al contador
         }
+
+        Debug.Log("Tienes una llave");
     }
     public int KeyCollected { get { return keyCollected; } }
     public bool[] Keys => keys;

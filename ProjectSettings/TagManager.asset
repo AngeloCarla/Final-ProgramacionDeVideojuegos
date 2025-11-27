@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 3
   tags:
   - ObjetoPrueba
+  - Wendigo
+  - Terrain
+  - Flashlight
+  - Tutorial
   layers:
   - Default
   - TransparentFX
