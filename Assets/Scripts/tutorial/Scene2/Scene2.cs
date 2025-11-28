@@ -46,7 +46,7 @@ public class Scene2 : MonoBehaviour
         RaycastHit hit;
         Ray ray = Camera.main.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
 
-        bool isPointing = Physics.Raycast(ray, out hit, 100f) && hit.transform == transform;
+        bool isPointing = Physics.Raycast(ray, out hit, 20f) && hit.transform == transform;
 
         // 3. Verificar Quietud (Usando la velocidad del CharacterController)
         float playerSpeed = playerCC.velocity.magnitude;

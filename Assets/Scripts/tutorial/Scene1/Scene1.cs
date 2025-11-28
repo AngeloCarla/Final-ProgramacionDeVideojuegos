@@ -4,11 +4,10 @@ using System.Collections;
 public class Scene1 : MonoBehaviour, IInteractable
 {
     public TutorialManager tutorialManager;
-    public GameObject hiddenPassage; // El muro que desaparece
+    public GameObject hiddenPassage;
 
     [Header("Conexión con Siguiente Escena")]
-    public GameObject scene2Object; // <--- ARRASTRA AQUÍ EL OBJETO PADRE DE LA ESCENA 2 (La sombra)
-    public int nextTutorialStep = 8; // Paso correcto para iniciar Escena 2
+    public GameObject scene2Object;
 
     private int hitCount = 0;
     private bool surrendered = false;
@@ -77,11 +76,7 @@ public class Scene1 : MonoBehaviour, IInteractable
 
         yield return new WaitForSeconds(0.5f);
 
-        // 3. Configurar el TutorialManager en el paso 8
-        tutorialManager.step = nextTutorialStep;
-        tutorialManager.ShowStep();
-
-        // 4. Destruir este objeto para limpiar
+        // 3. Destruir este objeto para limpiar
         Destroy(gameObject);
     }
 }

@@ -7,7 +7,6 @@ public class TutorialManager : MonoBehaviour
     public TutorialUI ui;
 
     public int step = 0;
-    private int flashlightPresses = 0;
     private bool waitingForAnyKey = false;
 
     void Start()
@@ -21,68 +20,61 @@ public class TutorialManager : MonoBehaviour
         if (waitingForAnyKey && Input.anyKeyDown)
         {
             waitingForAnyKey = false;
-            step++;
-            ShowStep();
-            return;
-        }
-
-        if (step == 2)
-        {
-            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.A) ||
-                Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.D))
-            {
-                step++;
-                ShowStep();
-            }
-        }
-        if (step == 3)
-        {
-            if (Input.GetKey(KeyCode.LeftShift) && Input.GetKey(KeyCode.W))
-            {
-                step++;
-                ShowStep();
-            }
-        }
-        if (step == 5)
-        {
-            if (Input.GetKeyDown(KeyCode.F))
-            {
-                flashlightPresses++;
-                if (flashlightPresses >= 2) ui.Hide(); // Solo ocultamos UI, no avanzamos step
-            }
+            AdvanceStep();
         }
     }
 
+    // --- FUNCIONES PÚBLICAS (Para que otros scripts las llamen) ---
+
+    public void AdvanceStep()
+    {
+        step++;
+        ShowStep();
+    }
+
+    public bool IsWaitingForTextKey()
+    {
+        return waitingForAnyKey;
+    }
+
+    // --- MÁQUINA DE ESTADOS ---
+
     public void ShowStep()
     {
+        Debug.Log("Tutorial Paso: " + step);
+
         switch (step)
         {
-            case 0: // Intro Texto
-                ui.ShowMessage("¿Dónde estoy...? No recuerdo nada... (Presiona cualquier tecla)", WaitForAnyKey);
+            // --- INTRODUCCIÓN ---
+            case 0:
+                ui.ShowMessage("¿Dónde estoy...? No recuerdo nada... (Presiona tecla)", WaitForAnyKey);
                 player.movementLocked = true;
                 break;
 
-            case 1: // Intro WASD Texto
+            case 1:
                 ui.ShowMessage("Necesito moverme... (Usa W A S D)", WaitForAnyKey);
                 break;
 
-            case 2: // Intro WASD Acción
+            case 2:
                 player.movementLocked = false;
-                ui.Hide(); // Ocultamos texto para dejar jugar
+                ui.Hide();
                 break;
 
-            case 3: // Intro Correr Texto
-                ui.ShowMessage("(Ahora intenta correr: SHIFT + W)", WaitForAnyKey);
+            case 3:
+                ui.ShowMessage("(Ahora intenta correr: SHIFT + W)", null);
                 break;
 
             case 4:
-                break;
-
-            case 5: // Linterna Texto
                 ui.ShowMessage("(Perfecto. Ahora probá tu linterna con F)", WaitForAnyKey);
                 break;
 
-            case 6: // INICIO ESCENA 1
+            case 5: 
+                ui.Hide();
+                break;
+
+            // --- ESCENAS DEL JUEGO ---
+
+            case 6:
                 ui.ShowMessage("Y esto... ¿Qué es? (Utiliza E para interactuar)", WaitForAnyKey);
                 break;
 
@@ -90,13 +82,12 @@ public class TutorialManager : MonoBehaviour
                 ui.Hide();
                 break;
 
-            case 8: // INICIO ESCENA 2
+            case 8:
                 ui.ShowMessage("Uhm... Quizás si utilizo la linterna... ¿Será eso la respuesta?", null);
                 break;
 
-            case 9: // FINAL
+            case 9:
                 ui.ShowMessage("¿Qué clase de lugar es éste? (Fin del Tutorial)", EndTutorial);
-                player.movementLocked = true;
                 break;
         }
     }
@@ -108,7 +99,14 @@ public class TutorialManager : MonoBehaviour
 
     void EndTutorial()
     {
-        // Lógica de fin de juego o cargar nivel 1
-        Debug.Log("Cargando Nivel 1...");
+        Debug.Log("Llamando al LevelManager para cargar Nivel 1...");
+        if (LevelManager.Instance != null)
+        {
+            LevelManager.Instance.LoadNextLevel();
+        }
+        else
+        {
+            Debug.LogError("ERROR: LevelManager no está presente en la escena. No se pudo cargar el siguiente nivel.");
+        }
     }
 }
