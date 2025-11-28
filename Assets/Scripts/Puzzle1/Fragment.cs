@@ -4,7 +4,7 @@ public class Fragment : MonoBehaviour, IInteractable
 {
     // Script base para cualquier objeto que el jugador pueda recoger o eliminar del escenario 
     [Header("Fragmento Extra")]
-    [SerializeField] private bool isExtra = false;
+   // [SerializeField] private bool isExtra = false;
 
     private AmbitionPuzzleManager puzzle1;
     void Start()
@@ -14,10 +14,12 @@ public class Fragment : MonoBehaviour, IInteractable
 
     public void PickUpFragment()
     {
+        /*
         if (puzzle1 != null)
         {
             puzzle1.AddFragment(isExtra);
         }
+        */
 
         Destroy(gameObject);
     }

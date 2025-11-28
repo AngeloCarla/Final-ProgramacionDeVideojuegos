@@ -7,7 +7,7 @@ public class Statue : MonoBehaviour, IInteractable
     [SerializeField] private ControlPuzzleManager manager; // Manager del puzzle
 
     private float rotationStep = 30f; // Cuanto gira la pieza
-    private float correctAngle = 0f; // Angulo correcto
+    private float correctAngle = 180f; // Angulo correcto
 
     private bool autoAligning = false;
 

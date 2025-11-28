@@ -3,11 +3,13 @@ using System.Collections;
 
 public class ControlPuzzleManager : MonoBehaviour
 {
-    [Header("Estatuas y puerta")]
+    [Header("Estatuas")]
     [SerializeField] private Statue[] statues; // Estatuas
-    [SerializeField] private GameObject door; // Puerta donde esta la llave
 
-    private float idleTimeNeeded = 15f; // Tiempo de inactividaad necesario
+    private float hintCooldown = 0f; // Conatdor para el mensaje
+    private float timeSinceLastHint = 5f;
+
+    private float idleTimeNeeded = 10f; // Tiempo de inactividaad necesario
     private float idleTimer = 0; // Contador de inactividad
 
     private bool completed = false;
@@ -18,6 +20,7 @@ public class ControlPuzzleManager : MonoBehaviour
 
         // Cuenta el tiempo sin tocar nada
         idleTimer += Time.deltaTime;
+        timeSinceLastHint += Time.deltaTime;
 
         // Cuando el jugador abandona el control y no toca lo suficiente
         if (idleTimer >= idleTimeNeeded)
@@ -25,7 +28,7 @@ public class ControlPuzzleManager : MonoBehaviour
             SolvePuzzle(); // Completa el desafio
         }
 
-       // Debug.Log($"TIEMPO: {idleTimer:F2} s"); // prueba
+        // Debug.Log($"TIEMPO: {idleTimer:F2} s"); // prueba
     }
 
     public void OnPlayerInteraction()
@@ -34,6 +37,18 @@ public class ControlPuzzleManager : MonoBehaviour
 
         // Cada vez que el jugador interactua con la estatua se reinicia el contador
         idleTimer = 0;
+
+        // Si pasaron 10 segundos desde la última pista, damos la pista
+        if (timeSinceLastHint >= hintCooldown)
+        {
+            ShowHint();
+            timeSinceLastHint = 0f;
+        }
+    }
+
+    public void ShowHint()
+    {
+         Debug.Log("No siempre debes controlar todo...");
     }
 
     public void SolvePuzzle()
@@ -42,15 +57,11 @@ public class ControlPuzzleManager : MonoBehaviour
 
         foreach (var s in statues)
         {
-            s.AutoAlign();
+            s.AutoAlign(); // Se alinean las estatuas
         }
 
-        Invoke("OpenDoor", 2f);
+        Debug.Log("Superaste el desafio y obtuviste una llave, Felicidades!");
     }
 
-    public void OpenDoor()
-    {
-        door.SetActive(false); // Se abre la puerta (Para recoger la llave)
-        Debug.Log("Felicidades");
-    }
+    public bool IsCompleted => completed;
 }

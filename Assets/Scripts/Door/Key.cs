@@ -9,7 +9,8 @@ public class Key : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            DoorSystem.Instance.CollectedKey(keyId); // Recolecta la llave
+            // DoorSystem.Instance.CollectedKey(keyId); // Recolecta la llave
+            Debug.Log($"Llave {keyId} recogida!");
             Destroy(gameObject); // Destruye el objeto
         }
     }
