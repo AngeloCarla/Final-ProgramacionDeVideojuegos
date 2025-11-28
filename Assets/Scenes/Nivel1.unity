@@ -2132,8 +2132,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 288123673}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 501, y: 105.2, z: 821.96}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: 501, y: 105.2, z: 826}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -4197,7 +4197,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 816379202}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-<<<<<<< HEAD
 --- !u!1 &824754699
 GameObject:
   m_ObjectHideFlags: 0
@@ -4476,7 +4475,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 897981778}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-<<<<<<< HEAD
 --- !u!1 &940137519
 GameObject:
   m_ObjectHideFlags: 0
@@ -4567,8 +4565,6 @@ Transform:
   - {fileID: 234425094}
   m_Father: {fileID: 483038350}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-=======
->>>>>>> feature-tutorial
 --- !u!1 &963089073
 GameObject:
   m_ObjectHideFlags: 0
@@ -4929,7 +4925,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1030399986}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-<<<<<<< HEAD
 --- !u!1 &1036948488
 GameObject:
   m_ObjectHideFlags: 0
@@ -5144,8 +5139,6 @@ Transform:
   - {fileID: 1667185678}
   m_Father: {fileID: 1396707581}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-=======
->>>>>>> feature-tutorial
 --- !u!1 &1088561892
 GameObject:
   m_ObjectHideFlags: 0
@@ -7844,7 +7837,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1646858531}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-<<<<<<< HEAD
 --- !u!1 &1660250512
 GameObject:
   m_ObjectHideFlags: 0
@@ -8001,8 +7993,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1667185677}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
-=======
->>>>>>> feature-tutorial
 --- !u!1 &1675558993
 GameObject:
   m_ObjectHideFlags: 0
@@ -10298,10 +10288,6 @@ SceneRoots:
   - {fileID: 304065803}
   - {fileID: 288123674}
   - {fileID: 2068219726}
-<<<<<<< HEAD
   - {fileID: 1639728557}
   - {fileID: 1111640758}
   - {fileID: 107175326}
-=======
-  - {fileID: 579801176}
->>>>>>> feature-tutorial
