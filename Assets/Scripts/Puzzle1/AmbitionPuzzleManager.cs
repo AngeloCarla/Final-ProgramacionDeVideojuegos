@@ -4,23 +4,23 @@ using UnityEngine;
 public class AmbitionPuzzleManager : MonoBehaviour
 {
     [Header("Fragmento y puerta")]
-    [SerializeField] private GameObject[] extraFragments; // Fragmentos extra
-                                                          // [SerializeField] private GameObject door; // Puerta donde esta la llave
+    // [SerializeField] private GameObject[] extraFragments; // Fragmentos extra
 
     private int requiredFragments = 5; // Fragmentos que debe recoger
     private int collectedFragments = 0; // Fragmentos recolectados
 
     private bool completed = false; // Completa correctamente el puzzle
-    private bool corrupted = false; // Se corrompe (no cumple)
+    // private bool corrupted = false; // Se corrompe (no cumple)
 
     public void AddFragment(bool isExtra)
     {
         // Si son fragmentos extra, el juego se corrompe
-        if (isExtra)
+       /* if (isExtra)
         {
             corrupted = true;
             return;
         }
+       */
 
         collectedFragments++; // Recolecta fragmentos
         Debug.Log($"Recolectaste {collectedFragments} de {requiredFragments}");
@@ -28,54 +28,55 @@ public class AmbitionPuzzleManager : MonoBehaviour
         if (collectedFragments == requiredFragments && !completed) // Si llega al total
         {
             completed = true;
-            StartCoroutine(OpenDoor()); // Se abre la puerta
+            // StartCoroutine(OpenDoor()); // Se abre la puerta
+
+            PuzzleCompleted(); // Completa el puzzle
         }
     }
-
+    /*
     private IEnumerator OpenDoor()
     {
         // Activacion de fragmentos extra (uno a uno)
-        foreach (var f in extraFragments)
-        {
-            float t = 3f; // Tiempo antes de mostrar otro fragmento
-            while (t > 0)
-            {
-                t -= Time.deltaTime;
-                yield return null; // Pasa al siguiente frame
-            }
+         foreach (var f in extraFragments)
+         {
+             float t = 3f; // Tiempo antes de mostrar otro fragmento
+             while (t > 0)
+             {
+                 t -= Time.deltaTime;
+                 yield return null; // Pasa al siguiente frame
+             }
 
-            //if (corrupted) break; // Si se corrompe, detiene todo
+             //if (corrupted) break; // Si se corrompe, detiene todo
 
-            f.SetActive(true);
-        }
+             f.SetActive(true);
+         }
 
-        // Espera hasta el final para decidir el destino del personaje
-        float finalWait = 6f;
-        while (finalWait > 0)
-        {
-            finalWait -= Time.deltaTime;
-            yield return null; // Pasa al siguiente frame
-        }
+         // Espera hasta el final para decidir el destino del personaje
+         float finalWait = 6f;
+         while (finalWait > 0)
+         {
+             finalWait -= Time.deltaTime;
+             yield return null; // Pasa al siguiente frame
+         }
 
-        // Si nunca se corrompio
-        if (!corrupted)
-        {
-            PuzzleCompleted(); // Completa el puzzle
-        }
-        else // Si cae en la tentacion
-        {
-            Debug.Log("Tomaste mas de lo que debias");
-            yield return new WaitForSeconds(6f);
-            Debug.Log("La ambicion te consumio...");
+         // Si nunca se corrompio
+         if (!corrupted)
+         {
+             PuzzleCompleted(); // Completa el puzzle
+         }
+         else // Si cae en la tentacion
+         {
+             Debug.Log("Tomaste mas de lo que debias");
+             yield return new WaitForSeconds(6f);
+             Debug.Log("La ambicion te consumio...");
 
-            // --- CASTIGO ---
-        }
-    }
+             // --- CASTIGO ---
+         }
+     }*/
 
     public void PuzzleCompleted()
     {
         completed = true;
-        // door.SetActive(false); // Se abre la puerta (Para recoger la llave)
         Debug.Log("Superaste el desafio y obtuviste una llave, Felicidades!");
     }
 

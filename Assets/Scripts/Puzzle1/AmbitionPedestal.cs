@@ -1,33 +1,29 @@
 using UnityEngine;
 
-public class AmbitionPedestal : MonoBehaviour, IInteractable
+public class AmbitionPedestal : MonoBehaviour
 {
     [Header("Manager")]
-    [SerializeField] private AmbitionPuzzleManager manager;
+    [SerializeField] private AmbitionPuzzleManager manager; // Manager
 
     [Header("Entrega y llave")]
-    [SerializeField] private GameObject key;
-    [SerializeField] private Transform pedestal;
+    [SerializeField] private GameObject key; // Prefab KeyAmbition
+    [SerializeField] private Transform pedestal; // PointKey
 
     private bool delivered = false;
 
-    public void Interact()
+    public void Update()
     {
         if (delivered) return;
 
         if (manager != null && manager.IsCompleted)
         {
-            DeliverKey();
-        }
-        else
-        {
-            Debug.Log("Aun no tienes suficiente");
+            Invoke("DeliverKey", 1f);
         }
     }
 
     public void DeliverKey()
     {
         delivered = true;
-        Instantiate(key, pedestal.position, pedestal.rotation);
+        Instantiate(key, pedestal.position, pedestal.rotation); // Instancia la llave
     }
 }

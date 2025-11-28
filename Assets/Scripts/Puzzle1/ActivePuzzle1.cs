@@ -11,7 +11,7 @@ public class ActivePuzzle1 : MonoBehaviour
         {
             Debug.Log("¿De verdad te basta con esto?");
 
-          //  mission.gameObject.SetActive(true); // Activa la mision
+            mission.gameObject.SetActive(true); // Activa la mision
             Destroy(gameObject); // Destruye para evitar repetirla
         }
     }
