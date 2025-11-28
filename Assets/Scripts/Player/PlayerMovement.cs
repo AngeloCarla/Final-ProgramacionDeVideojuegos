@@ -101,7 +101,6 @@ public class PlayerMovement : MonoBehaviour
         // Si el AudioSource SÍ está sonando, pero necesita cambiar de audio
         else if (audioSource.clip != targetClip)
         {
-            // Detiene la reproducción actual, asigna el nuevo clip y comienza a sonar.
             audioSource.Stop();
             audioSource.clip = targetClip;
             audioSource.Play();
