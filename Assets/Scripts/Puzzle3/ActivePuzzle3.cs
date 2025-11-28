@@ -1,16 +1,15 @@
 using UnityEngine;
 
-public class ActivePuzzle1 : MonoBehaviour
+public class ActivePuzzle3 : MonoBehaviour
 {
     [Header("Mision")]
-    [SerializeField] private AmbitionPuzzleManager mission;
+    [SerializeField] private ControlPuzzleManager mission;
 
     public void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("¿De verdad te basta con esto?");
-
+            Debug.Log("¿Crees poder controlarlo todo?");
             mission.gameObject.SetActive(true); // Activa la mision
             Destroy(gameObject); // Destruye para evitar repetirla
         }

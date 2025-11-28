@@ -1,12 +1,12 @@
 using UnityEngine;
 
-public class AmbitionPedestal : MonoBehaviour
+public class ControlPedestal : MonoBehaviour
 {
     [Header("Manager")]
-    [SerializeField] private AmbitionPuzzleManager manager; // Manager
+    [SerializeField] private ControlPuzzleManager manager; // Manager
 
     [Header("Entrega y llave")]
-    [SerializeField] private GameObject key; // Prefab KeyAmbition
+    [SerializeField] private GameObject key; // Prefab KeyControl
     [SerializeField] private Transform pedestal; // PointKey
 
     private bool delivered = false;
