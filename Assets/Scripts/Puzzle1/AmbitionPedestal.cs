@@ -17,13 +17,13 @@ public class AmbitionPedestal : MonoBehaviour
 
         if (manager != null && manager.IsCompleted)
         {
-            Invoke("DeliverKey", 1f);
+            delivered = true;
+            DeliverKey();
         }
     }
 
     public void DeliverKey()
     {
-        delivered = true;
         Instantiate(key, pedestal.position, pedestal.rotation); // Instancia la llave
     }
 }

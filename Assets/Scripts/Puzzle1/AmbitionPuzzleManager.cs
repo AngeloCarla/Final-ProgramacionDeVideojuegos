@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class AmbitionPuzzleManager : MonoBehaviour
 {
-    [Header("Fragmento y puerta")]
+    // [Header("Fragmento y puerta")]
     // [SerializeField] private GameObject[] extraFragments; // Fragmentos extra
 
     private int requiredFragments = 5; // Fragmentos que debe recoger
@@ -12,7 +12,7 @@ public class AmbitionPuzzleManager : MonoBehaviour
     private bool completed = false; // Completa correctamente el puzzle
     // private bool corrupted = false; // Se corrompe (no cumple)
 
-    public void AddFragment(bool isExtra)
+    public void AddFragment()
     {
         // Si son fragmentos extra, el juego se corrompe
        /* if (isExtra)
