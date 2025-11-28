@@ -472,7 +472,7 @@ Transform:
   m_GameObject: {fileID: 68309509}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.9, y: 3.86, z: 1.89}
+  m_LocalPosition: {x: 0.9, y: 4.01, z: 1.89}
   m_LocalScale: {x: 3, y: 0.41445002, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -768,7 +768,7 @@ Transform:
   m_GameObject: {fileID: 107175323}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.6112965, z: -0, w: 0.7914017}
-  m_LocalPosition: {x: 438, y: 102.152885, z: 544}
+  m_LocalPosition: {x: 436.5, y: 102.152885, z: 543.6}
   m_LocalScale: {x: 25, y: 8, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3507,13 +3507,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 644482560}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.99687725, z: -0, w: 0.078967474}
-  m_LocalPosition: {x: 10, y: 0, z: -33}
+  m_LocalRotation: {x: -0, y: 0.9987086, z: -0, w: -0.050805315}
+  m_LocalPosition: {x: -4.7, y: 0, z: -33.6}
   m_LocalScale: {x: 23.738867, y: 9.968989, z: 2.20146}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1639728557}
-  m_LocalEulerAnglesHint: {x: 0, y: 170.942, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 185.824, z: 0}
 --- !u!114 &644482562
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5252,6 +5252,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf0d53fffcc46b7409f95279ca666514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  puzzle1: {fileID: 1746556013}
 --- !u!135 &1121733960
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5589,6 +5590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf0d53fffcc46b7409f95279ca666514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  puzzle1: {fileID: 1746556013}
 --- !u!135 &1210865537
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -5891,7 +5893,6 @@ GameObject:
   - component: {fileID: 1295380868}
   - component: {fileID: 1295380867}
   - component: {fileID: 1295380866}
-  - component: {fileID: 1295380865}
   m_Layer: 6
   m_Name: Pedestal
   m_TagString: Untagged
@@ -5914,21 +5915,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 68309510}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1295380865
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1295380863}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 90619dce40f66784694bee66fabd177c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  manager: {fileID: 1746556013}
-  key: {fileID: 76414851944988432, guid: ce72ab44d9548ca44980c8cbe83bdd4f, type: 3}
-  pedestal: {fileID: 940137520}
 --- !u!65 &1295380866
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6658,6 +6644,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf0d53fffcc46b7409f95279ca666514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  puzzle1: {fileID: 1746556013}
 --- !u!135 &1444219996
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -8866,6 +8853,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf0d53fffcc46b7409f95279ca666514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  puzzle1: {fileID: 1746556013}
 --- !u!135 &1886131445
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -9598,6 +9586,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf0d53fffcc46b7409f95279ca666514, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  puzzle1: {fileID: 1746556013}
 --- !u!135 &2011225908
 SphereCollider:
   m_ObjectHideFlags: 0
